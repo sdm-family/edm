@@ -54,6 +54,7 @@
     <Compile Include="Data.fs" />
     <Compile Include="Cell.fs" />
     <Compile Include="Sheet.fs" />
+    <Compile Include="Writer.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
