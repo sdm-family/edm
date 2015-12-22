@@ -21,7 +21,7 @@ type Writer (outputFilePath: string, templateFilePath: string) =
   member __.WriteCell(sheet: ExcelWorksheet, cell: Cell) =
     let target = getCell sheet.Cells cell
     cell.Data |> DataWriter.writeTo target
-    // TODO : cell.Format |> FormatSetter.setTo target
+    cell.Format |> CellFormatSetter.setTo target
 
   member this.WriteSheet(sheet: Sheet) =
     let s = this.CurrentBook.Worksheets.Add(sheet.Name)
