@@ -44,6 +44,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="RgbColor.fs" />
+    <Compile Include="Underline.fs" />
+    <Compile Include="FontInfo.fs" />
+    <Compile Include="RepresentationFormatInfo.fs" />
+    <Compile Include="LayoutInfo.fs" />
+    <Compile Include="BordersInfo.fs" />
+    <Compile Include="FormatInfo.fs" />
+    <Compile Include="Data.fs" />
+    <Compile Include="Cell.fs" />
+    <Compile Include="Sheet.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
