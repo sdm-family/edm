@@ -6,7 +6,7 @@ type RichTextSegment = {
 }
 
 type RichText = {
-  Values: RichTextSegment list
+  Segments: RichTextSegment list
   FontInfo: FontInfo
 }
 

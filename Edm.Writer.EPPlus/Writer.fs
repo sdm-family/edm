@@ -18,10 +18,10 @@ type Writer (outputFilePath: string, templateFilePath: string) =
   member val private CurrentBook = Unchecked.defaultof<ExcelWorkbook> with get, set
   member val private TemplateSheet = Unchecked.defaultof<ExcelWorksheet> with get, set
 
-  member this.WriteCell(sheet: ExcelWorksheet, cell: Cell) =
+  member __.WriteCell(sheet: ExcelWorksheet, cell: Cell) =
     let target = getCell sheet.Cells cell
-    // TODO : 実装
-    ()
+    cell.Data |> DataWriter.writeTo target
+    // TODO : cell.Format |> FormatSetter.setTo target
 
   member this.WriteSheet(sheet: Sheet) =
     let s = this.CurrentBook.Worksheets.Add(sheet.Name)

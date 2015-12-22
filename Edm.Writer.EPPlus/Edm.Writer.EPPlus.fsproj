@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="packages.config" />
+    <Compile Include="DataWriter.fs" />
     <Compile Include="Writer.fs" />
   </ItemGroup>
   <ItemGroup>

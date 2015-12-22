@@ -12,3 +12,7 @@ with
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module RgbColor =
   let create (r, g, b) = Rgb (r, g, b)
+
+  let toOption = function
+  | NoColor -> None
+  | Rgb (r, g, b) -> Some (r, g, b)
