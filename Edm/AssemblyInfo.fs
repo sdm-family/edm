@@ -8,7 +8,7 @@ open System.Runtime.InteropServices
 // 制御されます。アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更します。
 [<assembly: AssemblyTitle("Edm")>]
-[<assembly: AssemblyDescription("")>]
+[<assembly: AssemblyDescription("Excel Document Model")>]
 [<assembly: AssemblyConfiguration("")>]
 [<assembly: AssemblyCompany("")>]
 [<assembly: AssemblyProduct("Edm")>]

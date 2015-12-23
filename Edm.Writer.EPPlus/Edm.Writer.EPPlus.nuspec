@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>bleis-tift</authors>
+    <owners>bleis-tift</owners>
+    <licenseUrl>https://github.com/sdm-family/edm/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/sdm-family/edm</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <tags>Excel</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Xml"/>
+      <frameworkAssembly assemblyName="System.Drawing"/>
+    </frameworkAssemblies>
+    <dependencies>
+      <dependency id="EPPlus" version="[4.0.4]" />
+      <dependency id="Edm" version="[1.0.0.0,2.0.0.0)" />
+    </dependencies>
+  </metadata>
+</package>

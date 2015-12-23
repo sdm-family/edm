@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>bleis-tift</authors>
+    <owners>bleis-tift</owners>
+    <licenseUrl>https://github.com/sdm-family/edm/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/sdm-family/edm</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <tags>Excel</tags>
+  </metadata>
+</package>
