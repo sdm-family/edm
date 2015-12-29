@@ -1,5 +1,4 @@
 ﻿open Edm
-open Edm.Writer
 open Edm.Writer.EPPlus
 
 let noBorder = { Style = NoBorder; Color = NoColor }
@@ -72,6 +71,6 @@ let sheets = [
 
 [<EntryPoint>]
 let main _ =
-  let writer = Writer("output.xlsx", "template.xlsx") :> IWriter
+  let writer = EPPlusWriter.create ("output.xlsx", "template.xlsx")
   writer.Write(sheets)
   0

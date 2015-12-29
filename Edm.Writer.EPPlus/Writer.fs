@@ -1,11 +1,15 @@
 ﻿namespace Edm.Writer.EPPlus
 
+#nowarn "44"
+
 open Edm
 open Edm.Writer
+open System
 open System.IO
 open OfficeOpenXml
 
-type Writer (outputFilePath: string, templateFilePath: string) =
+type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPPlus.EPPlusWriter.createを使ってください。")>]
+    (outputFilePath: string, templateFilePath: string) =
   let getCell (range: ExcelRange) { Row = row; Column = col; MergedRows = height; MergedColumns = width } =
     // EPPlusは1オリジンだが、Edmは0オリジンなのでここで調整する
     if height > 1 || width > 1 then
@@ -42,3 +46,8 @@ type Writer (outputFilePath: string, templateFilePath: string) =
 
       this.CurrentBook.Worksheets.Delete(this.TemplateSheet)
       package.Save()
+
+[<RequireQualifiedAccess>]
+module EPPlusWriter =
+  let create (outputFilePath: string, templateFilePath: string) =
+    Writer(outputFilePath, templateFilePath) :> IWriter
