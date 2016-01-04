@@ -68,5 +68,4 @@ let setTo (target: ExcelRange) (format: FormatInfo) =
     target.Style.Fill.PatternType <- Style.ExcelFillStyle.Solid
     target.Style.Fill.BackgroundColor.SetColor(Color.FromArgb(r, g, b)))
   format.Layout |> setLayoutTo target.Style
-  // TODO : 実装
-  // format.RepresentationFormat |> setReprFormatTo target.Style.Numberformat
+  format.RepresentationFormat |> RepresentationFormatSetter.setTo target.Style.Numberformat
