@@ -76,3 +76,7 @@ type RepresentationFormatInfo =
   | PosNegZeroReprFormat of Positive:CodeSection * Negative:CodeSection * Zero:CodeSection
   | PosNegReprFormat of ZeroAndPositive:CodeSection * Negative:CodeSection
   | OneReprFormat of All:CodeSection
+
+module RepresentationFormat =
+  let general =
+    OneReprFormat { Color = None; Condition = None; Format = NumericFormat [NFCLiteral "General"] }

@@ -26,3 +26,13 @@ type LayoutInfo = {
   HorizontalLayout: HorizontalLayoutInfo
   VerticalLayout: VerticalLayoutInfo
 }
+
+module Layout =
+  let defaultTextLayout = {
+    HorizontalLayout = HLLeft 0
+    VerticalLayout = VLCenter NoTextControl
+  }
+  let defaultNumberLayout = {
+    HorizontalLayout = HLRight 0
+    VerticalLayout = VLCenter NoTextControl
+  }

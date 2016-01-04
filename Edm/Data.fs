@@ -20,4 +20,3 @@ type Data =
   | RichNumber of RichNumber
   | Formula of string
   | Other of obj
-

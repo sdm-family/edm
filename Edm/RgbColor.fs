@@ -13,6 +13,8 @@ with
 module RgbColor =
   let create (r, g, b) = Rgb (r, g, b)
 
+  let black = create (0, 0, 0)
+
   let toOption = function
   | NoColor -> None
   | Rgb (r, g, b) -> Some (r, g, b)
