@@ -38,6 +38,8 @@ let doNothing = ()
 let setRichTextTo (target: ExcelRange) (txt: RichText) =
   let baseFontInfo = txt.FontInfo
   for seg in txt.Segments do
+    if not target.Style.WrapText && (seg.Value.Contains("\r") || seg.Value.Contains("\n")) then
+      target.Style.WrapText <- true
     let richTxt = target.RichText.Add(seg.Value)
     match mergeFontInfo (baseFontInfo, seg.FontInfo) with
     | None -> doNothing
@@ -85,4 +87,8 @@ let writeTo (target: ExcelRange) = function
 | RichText text -> text |> setRichTextTo target
 | RichNumber num -> num |> setRichNumberTo target
 | Formula f -> target.Formula <- f
-| Other data -> target.Value <- data
+| Other data ->
+    let str = string data
+    if str.Contains("\r") || str.Contains("\n") then
+      target.Style.WrapText <- true
+    target.Value <- data

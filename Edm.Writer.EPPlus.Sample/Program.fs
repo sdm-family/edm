@@ -22,6 +22,9 @@ let font = {
 let richNum (num, font) =
   RichNumber { RichNumber.Value = num; FontInfo = FontInfo font }
 
+let richTxt (txt, font) =
+  RichText { RichText.Segments = [ { RichTextSegment.Value = txt; FontInfo = NoFontInfo } ]; FontInfo = FontInfo font }
+
 let titleCols = 15
 
 let nextCells (title: string) (gen: Cell -> Cell) (row: int) =
@@ -59,9 +62,10 @@ let samples =
         Diagonal = { Border = noBorder; TopLeftToBottomRight = false; BottomLeftToTopRight = false } }
     { cell with Format = { format with Borders = borders } }) >>= fun s11 ->
   nextCells "12. 背景色(薄い青)" (fun cell -> { cell with Format = { format with BackgroundColor = Rgb (200, 220, 255) } }) >>= fun s12 ->
+  nextCells "13. 改行" (fun cell -> { cell with MergedRows = 2; MergedColumns = 10; Data = richTxt ("hoge\npiyo", font) }) >>= fun s13 ->
   return' [
     yield! s1; yield! s2; yield! s3; yield! s4; yield! s5; yield! s6; yield! s7; yield! s8; yield! s9; yield! s10
-    yield! s11; yield! s12
+    yield! s11; yield! s12; yield! s13
   ]
 
 let sheets = [

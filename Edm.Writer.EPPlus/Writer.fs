@@ -24,8 +24,8 @@ type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPP
 
   member __.WriteCell(sheet: ExcelWorksheet, cell: Cell) =
     let target = getCell sheet.Cells cell
-    cell.Data |> DataWriter.writeTo target
     cell.Format |> CellFormatSetter.setTo target
+    cell.Data |> DataWriter.writeTo target
 
   member this.WriteSheet(sheet: Sheet) =
     let s = this.CurrentBook.Worksheets.Add(sheet.Name, this.TemplateSheet)
