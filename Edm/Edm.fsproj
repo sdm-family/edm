@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +54,7 @@
     <Compile Include="FormatInfo.fs" />
     <Compile Include="Data.fs" />
     <Compile Include="Cell.fs" />
+    <Compile Include="Drawing.fs" />
     <Compile Include="Sheet.fs" />
     <Compile Include="Writer.fs" />
   </ItemGroup>

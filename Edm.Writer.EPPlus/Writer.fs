@@ -7,6 +7,7 @@ open Edm.Writer
 open System
 open System.IO
 open OfficeOpenXml
+open OfficeOpenXml.Drawing
 
 type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPPlus.EPPlusWriter.createを使ってください。")>]
     (outputFilePath: string, templateFilePath: string) =
@@ -27,10 +28,52 @@ type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPP
     cell.Format |> CellFormatSetter.setTo target
     cell.Data |> DataWriter.writeTo target
 
+  member __.WriteDrawing(sheet: ExcelWorksheet, d: Drawing) =
+    let toTextAnchoring = function
+    | VABottom -> eTextAnchoringType.Bottom
+    | VACenter -> eTextAnchoringType.Center
+    | VADistributed -> eTextAnchoringType.Distributed
+    | VAJustify -> eTextAnchoringType.Justify
+    | VATop -> eTextAnchoringType.Top
+
+    let toTextAlignment = function
+    | HALeft -> eTextAlignment.Left
+    | HACenter -> eTextAlignment.Center
+    | HARight -> eTextAlignment.Right
+    | HADistributed -> eTextAlignment.Distributed
+    | HAJustified -> eTextAlignment.Justified
+    | HAJustifiedLow -> eTextAlignment.JustifiedLow
+    | HAThaiDistributed -> eTextAlignment.ThaiDistributed
+
+    let name = d.Name
+    let drawing =
+      match d.Body with
+      | Image (ImageObject image) -> sheet.Drawings.AddPicture(name, image) :> ExcelDrawing
+      | Image (ImagePath path) -> sheet.Drawings.AddPicture(name, path) :> ExcelDrawing
+      | Shape body ->
+          let shape = sheet.Drawings.AddShape(name, body.Type |> Shape.toEPPlusShapeStyle)
+          match body.Text with
+          | None -> ()
+          | Some text ->
+              DataWriter.addRichTextTo shape.RichText text.Text
+              shape.TextAnchoring <- toTextAnchoring text.VAlign
+              shape.TextAlignment <- toTextAlignment text.HAlign
+          shape :> ExcelDrawing
+
+    match d.Position with
+    | TopLeftPixel (top, left) -> drawing.SetPosition(int top, int left)
+    | RowColAndOffsetPixcel (row, col) -> drawing.SetPosition(row.Address, int row.Offset, col.Address, int col.Offset)
+
+    match d.Size with
+    | Percent p -> drawing.SetSize(p)
+    | Pixel (w, h) -> drawing.SetSize(int w, int h)
+
   member this.WriteSheet(sheet: Sheet) =
     let s = this.CurrentBook.Worksheets.Add(sheet.Name, this.TemplateSheet)
     for cell in sheet.Cells do
       this.WriteCell(s, cell)
+    for d in sheet.Drawings do
+      this.WriteDrawing(s, d)
 
   interface IWriter with
     member this.Write(sheets) =

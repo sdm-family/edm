@@ -35,11 +35,36 @@ let mergeFontInfo = function
 
 let doNothing = ()
 
-let setRichTextTo (target: ExcelRange) (txt: RichText) =
+let isMultiline (txt: RichText) =
+  txt.Segments |> Seq.exists (fun seg -> seg.Value.Contains("\r") || seg.Value.Contains("\n"))
+
+let addRichTextTo (paragraphCollection: Style.ExcelParagraphCollection) (txt: RichText) =
   let baseFontInfo = txt.FontInfo
   for seg in txt.Segments do
-    if not target.Style.WrapText && (seg.Value.Contains("\r") || seg.Value.Contains("\n")) then
-      target.Style.WrapText <- true
+    let paragraph = paragraphCollection.Add(seg.Value)
+    match mergeFontInfo (baseFontInfo, seg.FontInfo) with
+    | None -> doNothing
+    | Some (nameOpt, sizeOpt, styleOpt, underlineOpt, colorOpt, decorationOpt) ->
+        nameOpt |> Option.iter (fun name -> paragraph.LatinFont <- name)
+        sizeOpt |> Option.iter (fun size -> paragraph.Size <- float32 size)
+        styleOpt |> Option.iter (fun (bold, itaric) -> paragraph.Bold <- bold; paragraph.Italic <- itaric)
+        underlineOpt |> Option.iter (fun underline ->
+          paragraph.UnderLine <-
+            match underline with
+            | NoUnderline -> Style.eUnderLineType.None
+            | Underline -> Style.eUnderLineType.Single
+            | DoubleUnderline -> Style.eUnderLineType.Double
+            | AccountingUnderline -> Style.eUnderLineType.Single
+            | AccountingDoubleUnderline -> Style.eUnderLineType.Double)
+        colorOpt |> Option.iter (fun (r, g, b) -> paragraph.Color <- Color.FromArgb(r, g, b))
+        decorationOpt |> Option.iter (fun (strike, sub, sup) ->
+          paragraph.Strike <- if strike then Style.eStrikeType.Single else Style.eStrikeType.No)
+
+let setRichTextTo (target: ExcelRange) (txt: RichText) =
+  if isMultiline txt then
+    target.Style.WrapText <- true
+  let baseFontInfo = txt.FontInfo
+  for seg in txt.Segments do
     let richTxt = target.RichText.Add(seg.Value)
     match mergeFontInfo (baseFontInfo, seg.FontInfo) with
     | None -> doNothing

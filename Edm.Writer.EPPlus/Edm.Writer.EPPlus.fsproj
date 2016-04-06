@@ -55,6 +55,7 @@
     <Compile Include="DataWriter.fs" />
     <Compile Include="RepresentationFormatSetter.fs" />
     <Compile Include="CellFormatSetter.fs" />
+    <Compile Include="Shape.fs" />
     <Compile Include="Writer.fs" />
   </ItemGroup>
   <ItemGroup>

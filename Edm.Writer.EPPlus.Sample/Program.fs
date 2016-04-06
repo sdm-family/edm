@@ -68,9 +68,23 @@ let samples =
     yield! s11; yield! s12; yield! s13
   ]
 
+let noFontRichText text =
+  { RichText.Segments = [ { RichTextSegment.Value = text; FontInfo = NoFontInfo } ]; FontInfo = FontInfo font }
+
+let meiryo = { font with Name = FontName "メイリオ" }
+
+let updateFont font text =
+  { text with RichText.FontInfo = FontInfo font }
+
+let leftify shapeText =
+  { shapeText with HAlign = HALeft }
+
 let sheets = [
-  { Name = "sample1"; Cells = samples 0 |> fst }
-  { Name = "sample2"; Cells = [] }
+  { Name = "sample1"; Cells = samples 0 |> fst; Drawings = [] }
+  { Name = "sample2"; Cells = []; Drawings =
+      [ Shape.createWithText "hoge" ShapeOfCallout1 (ShapeText.create (noFontRichText "Hello" |> updateFont meiryo)) (TopLeftPixel (10<pixel>, 10<pixel>))
+        Drawing.updateSize (Percent 50) (Shape.createWithText "piyo" ShapeOfCallout2 (ShapeText.create (noFontRichText "Hello") |> leftify) (TopLeftPixel (250<pixel>, 10<pixel>)))
+        Image.cerateFromPath "" (System.IO.FileInfo("sample.png")) (TopLeftPixel (10<pixel>, 250<pixel>))] }
 ]
 
 [<EntryPoint>]
