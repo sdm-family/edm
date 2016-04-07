@@ -89,3 +89,39 @@ module Font =
 
   let underlined name size style color =
     createRaw name size style color (Some Underline) NoDecoration
+
+  let editFontInfoData f = function
+  | NoFontInfo -> NoFontInfo
+  | FontInfo font -> FontInfo (f font)
+
+  let updateName name = function
+  | NoFontInfo -> create (FontName name) NoFontSize NoFontStyle NoColor
+  | FontInfo font -> FontInfo { font with Name = FontName name }
+
+  let updateSize size = function
+  | NoFontInfo -> create NoFontName (FontSize size) NoFontStyle NoColor
+  | FontInfo font -> FontInfo { font with Size = FontSize size }
+
+  let updateStyle style = function
+  | NoFontInfo -> create NoFontName NoFontSize style NoColor
+  | FontInfo font -> FontInfo { font with Style = style }
+
+  let updateColor color = function
+  | NoFontInfo -> create NoFontName NoFontSize NoFontStyle color
+  | FontInfo font -> FontInfo { font with Color = color }
+
+  let unsetName = function
+  | NoFontInfo -> NoFontInfo
+  | FontInfo font -> FontInfo { font with Name = NoFontName }
+
+  let unsetSize = function
+  | NoFontInfo -> NoFontInfo
+  | FontInfo font -> FontInfo { font with Size = NoFontSize }
+
+  let unsetStyle = function
+  | NoFontInfo -> NoFontInfo
+  | FontInfo font -> FontInfo { font with Style = NoFontStyle }
+
+  let unsetColor = function
+  | NoFontInfo -> NoFontInfo
+  | FontInfo font -> FontInfo { font with Color = NoColor }
