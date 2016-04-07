@@ -30,6 +30,10 @@ module RichText =
   | RichText text -> RichText (f text)
   | other -> other
 
+  let editSegments f = function
+  | RichText text -> RichText ({ text with Segments = f text.Segments })
+  | other -> other
+
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module RichNumber =
   let create (value, font) = { Value = value; FontInfo = font }
@@ -37,6 +41,10 @@ module RichNumber =
 
   let edit f = function
   | RichNumber num -> RichNumber (f num)
+  | other -> other
+
+  let editValue f = function
+  | RichNumber num -> RichNumber { num with Value = f num.Value }
   | other -> other
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
