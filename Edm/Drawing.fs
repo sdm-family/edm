@@ -261,7 +261,7 @@ module Image =
   let createFromObject name body pos =
     { Name = name; Body = Image (ImageObject body); Position = pos; Size = Percent 100 }
 
-  let cerateFromPath name path pos =
+  let createFromPath name path pos =
     { Name = name; Body = Image (ImagePath path); Position = pos; Size = Percent 100 }
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
