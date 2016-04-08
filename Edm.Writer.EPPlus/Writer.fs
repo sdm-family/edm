@@ -9,8 +9,26 @@ open System.IO
 open OfficeOpenXml
 open OfficeOpenXml.Drawing
 
-type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPPlus.EPPlusWriter.createを使ってください。")>]
-    (outputFilePath: string, templateFilePath: string) =
+type LongEdge = LEHeight | LEWidth
+
+type PrintArea = {
+  StartRow: int
+  StartColumn: int
+  EndRow: int
+  EndColumn: int
+}
+
+type Fit = FitToPage | FitToWidth of int | FitToHeight of int
+
+type SheetSettings = {
+  ShowGuideLines: bool option
+  LongEdge: LongEdge option
+  PrintArea: PrintArea option
+  Fit: Fit option
+}
+
+type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPPlus.EPPlusWriterモジュールの関数を使ってください。")>]
+    (outputFilePath: string, templateFilePath: string, settings: SheetSettings) =
   let getCell (range: ExcelRange) { Row = row; Column = col; MergedRows = height; MergedColumns = width } =
     // EPPlusは1オリジンだが、Edmは0オリジンなのでここで調整する
     if height > 1 || width > 1 then
@@ -70,6 +88,20 @@ type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPP
 
   member this.WriteSheet(sheet: Sheet) =
     let s = this.CurrentBook.Worksheets.Add(sheet.Name, this.TemplateSheet)
+    settings.ShowGuideLines |> Option.iter (fun x -> s.View.ShowGridLines <- x)
+    settings.LongEdge
+    |> Option.iter (function
+                    | LEHeight -> s.PrinterSettings.Orientation <- eOrientation.Portrait
+                    | LEWidth -> s.PrinterSettings.Orientation <- eOrientation.Landscape)
+    settings.PrintArea
+    |> Option.iter (fun a ->
+         let range = s.Cells.[a.StartRow + 1, a.StartColumn + 1, a.EndRow + 1, a.EndColumn + 1]
+         s.PrinterSettings.PrintArea <- range)
+    settings.Fit
+    |> Option.iter (function
+                    | FitToPage -> s.PrinterSettings.FitToPage <- true
+                    | FitToWidth x -> s.PrinterSettings.FitToWidth <- x
+                    | FitToHeight x -> s.PrinterSettings.FitToHeight <- x)
     for cell in sheet.Cells do
       this.WriteCell(s, cell)
     for d in sheet.Drawings do
@@ -93,4 +125,7 @@ type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPP
 [<RequireQualifiedAccess>]
 module EPPlusWriter =
   let create (outputFilePath: string, templateFilePath: string) =
-    Writer(outputFilePath, templateFilePath) :> IWriter
+    Writer(outputFilePath, templateFilePath, { ShowGuideLines = None; LongEdge = None; PrintArea = None; Fit = None }) :> IWriter
+
+  let createWithSettings settings (outputFilePath: string, templateFilePath: string) =
+    Writer(outputFilePath, templateFilePath, settings) :> IWriter
