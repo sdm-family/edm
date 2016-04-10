@@ -20,6 +20,12 @@ type PrintArea = {
 
 type Fit = FitToPage | FitToWidth of int | FitToHeight of int
 
+type BookSettings = {
+  ShowHorizontalScrollBar: bool option
+  ShowVerticalScrollBar: bool option
+  ShowSheetTabs: bool option
+}
+
 type SheetSettings = {
   ShowGuideLines: bool option
   LongEdge: LongEdge option
@@ -28,7 +34,7 @@ type SheetSettings = {
 }
 
 type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPPlus.EPPlusWriterモジュールの関数を使ってください。")>]
-    (outputFilePath: string, templateFilePath: string, settings: SheetSettings) =
+    (outputFilePath: string, templateFilePath: string, bookSettings: BookSettings, sheetSettings: SheetSettings) =
   let getCell (range: ExcelRange) { Row = row; Column = col; MergedRows = height; MergedColumns = width } =
     // EPPlusは1オリジンだが、Edmは0オリジンなのでここで調整する
     if height > 1 || width > 1 then
@@ -88,16 +94,16 @@ type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPP
 
   member this.WriteSheet(sheet: Sheet) =
     let s = this.CurrentBook.Worksheets.Add(sheet.Name, this.TemplateSheet)
-    settings.ShowGuideLines |> Option.iter (fun x -> s.View.ShowGridLines <- x)
-    settings.LongEdge
+    sheetSettings.ShowGuideLines |> Option.iter (fun x -> s.View.ShowGridLines <- x)
+    sheetSettings.LongEdge
     |> Option.iter (function
                     | LEHeight -> s.PrinterSettings.Orientation <- eOrientation.Portrait
                     | LEWidth -> s.PrinterSettings.Orientation <- eOrientation.Landscape)
-    settings.PrintArea
+    sheetSettings.PrintArea
     |> Option.iter (fun a ->
          let range = s.Cells.[a.StartRow + 1, a.StartColumn + 1, a.EndRow + 1, a.EndColumn + 1]
          s.PrinterSettings.PrintArea <- range)
-    settings.Fit
+    sheetSettings.Fit
     |> Option.iter (function
                     | FitToPage -> s.PrinterSettings.FitToPage <- true
                     | FitToWidth x -> s.PrinterSettings.FitToWidth <- x
@@ -114,6 +120,12 @@ type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPP
 
       use package = new ExcelPackage(outputFile, templateFile)
       this.CurrentBook <- package.Workbook
+      bookSettings.ShowHorizontalScrollBar
+      |> Option.iter (fun x -> this.CurrentBook.View.ShowHorizontalScrollBar <- x)
+      bookSettings.ShowVerticalScrollBar
+      |> Option.iter (fun x -> this.CurrentBook.View.ShowVerticalScrollBar <- x)
+      bookSettings.ShowSheetTabs
+      |> Option.iter (fun x -> this.CurrentBook.View.ShowSheetTabs <- x)
       this.TemplateSheet <- this.CurrentBook.Worksheets.[1] // EPPlusはすべてが1オリジン
 
       for sheet in sheets do
@@ -125,7 +137,25 @@ type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPP
 [<RequireQualifiedAccess>]
 module EPPlusWriter =
   let create (outputFilePath: string, templateFilePath: string) =
-    Writer(outputFilePath, templateFilePath, { ShowGuideLines = None; LongEdge = None; PrintArea = None; Fit = None }) :> IWriter
+    Writer(
+      outputFilePath,
+      templateFilePath,
+      { ShowSheetTabs = None; ShowHorizontalScrollBar = None; ShowVerticalScrollBar = None },
+      { ShowGuideLines = None; LongEdge = None; PrintArea = None; Fit = None }) :> IWriter
 
-  let createWithSettings settings (outputFilePath: string, templateFilePath: string) =
-    Writer(outputFilePath, templateFilePath, settings) :> IWriter
+  let createWithSettings (bookSettings, sheetSettings) (outputFilePath: string, templateFilePath: string) =
+    Writer(outputFilePath, templateFilePath, bookSettings, sheetSettings) :> IWriter
+
+  let createWithBookSettings settings (outputFilePath: string, templateFilePath: string) =
+    Writer(
+      outputFilePath,
+      templateFilePath,
+      settings,
+      { ShowGuideLines = None; LongEdge = None; PrintArea = None; Fit = None }) :> IWriter
+
+  let createWithSheetSettings settings (outputFilePath: string, templateFilePath: string) =
+    Writer(
+      outputFilePath,
+      templateFilePath,
+      { ShowSheetTabs = None; ShowHorizontalScrollBar = None; ShowVerticalScrollBar = None },
+      settings) :> IWriter
