@@ -120,7 +120,7 @@ let sheets = [
         let name = "shape" + string i
         let row = { Address = i * 5; Offset = 0<pixel> }
         let col = { Address = 1; Offset = 0<pixel> }
-        Shape.createWithText name s (ShapeText.create (noFontRichText (sprintf "%A" s) |> updateFont meiryo)) (RowColAndOffsetPixcel(row, col))
+        Shape.createWithText name s (ShapeText.create (noFontRichText (sprintf "%A" s) |> updateFont meiryo)) (RowColAndOffsetPixel(row, col))
         |> Drawing.updateSize (Percent 50)
       ) }
 ]

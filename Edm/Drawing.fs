@@ -238,7 +238,7 @@ type AddressAndOffset = {
 
 type Position =
   | TopLeftPixel of Top:int<pixel> * Left:int<pixel>
-  | RowColAndOffsetPixcel of Row:AddressAndOffset * Col:AddressAndOffset
+  | RowColAndOffsetPixel of Row:AddressAndOffset * Col:AddressAndOffset
 
 type Size =
   | Percent of int

@@ -88,7 +88,7 @@ type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPP
 
     match d.Position with
     | TopLeftPixel (top, left) -> drawing.SetPosition(int top, int left)
-    | RowColAndOffsetPixcel (row, col) -> drawing.SetPosition(row.Address, int row.Offset, col.Address, int col.Offset)
+    | RowColAndOffsetPixel (row, col) -> drawing.SetPosition(row.Address, int row.Offset, col.Address, int col.Offset)
 
     match d.Size with
     | Percent p -> drawing.SetSize(p)
