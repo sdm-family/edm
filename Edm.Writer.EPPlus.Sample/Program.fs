@@ -79,12 +79,50 @@ let updateFont font text =
 let leftify shapeText =
   { shapeText with HAlign = HALeft }
 
+let shapes =
+  [ ShapeOfAccentBorderCallout1; ShapeOfAccentBorderCallout2; ShapeOfAccentBorderCallout3; ShapeOfAccentCallout1; ShapeOfAccentCallout2
+    ShapeOfAccentCallout3; ShapeOfActionButtonBackPrevious; ShapeOfActionButtonBeginning; ShapeOfActionButtonBlank; ShapeOfActionButtonDocument
+    ShapeOfActionButtonEnd; ShapeOfActionButtonForwardNext; ShapeOfActionButtonHelp; ShapeOfActionButtonHome; ShapeOfActionButtonInformation
+    ShapeOfActionButtonMovie; ShapeOfActionButtonReturn; ShapeOfActionButtonSound; ShapeOfArc; ShapeOfBentArrow; ShapeOfBentConnector2
+    ShapeOfBentConnector3; ShapeOfBentConnector4; ShapeOfBentConnector5; ShapeOfBentUpArrow; ShapeOfBevel; ShapeOfBlockArc; ShapeOfBorderCallout1
+    ShapeOfBorderCallout2; ShapeOfBorderCallout3; ShapeOfBracePair; ShapeOfBracketPair; ShapeOfCallout1; ShapeOfCallout2; ShapeOfCallout3; ShapeOfCan
+    ShapeOfChartPlus; ShapeOfChartStar; ShapeOfChartX; ShapeOfChevron; ShapeOfChord; ShapeOfCircularArrow; ShapeOfCloud; ShapeOfCloudCallout
+    ShapeOfCorner; ShapeOfCornerTabs; ShapeOfCube; ShapeOfCurvedConnector2; ShapeOfCurvedConnector3; ShapeOfCurvedConnector4; ShapeOfCurvedConnector5
+    ShapeOfCurvedDownArrow; ShapeOfCurvedLeftArrow; ShapeOfCurvedRightArrow; ShapeOfCurvedUpArrow; ShapeOfDecagon; ShapeOfDiagStripe; ShapeOfDiamond
+    ShapeOfDodecagon; ShapeOfDonut; ShapeOfDoubleWave; ShapeOfDownArrow; ShapeOfDownArrowCallout; ShapeOfEllipse; ShapeOfEllipseRibbon; ShapeOfEllipseRibbon2
+    ShapeOfFlowChartAlternateProcess; ShapeOfFlowChartCollate; ShapeOfFlowChartConnector; ShapeOfFlowChartDecision; ShapeOfFlowChartDelay; ShapeOfFlowChartDisplay
+    ShapeOfFlowChartDocument; ShapeOfFlowChartExtract; ShapeOfFlowChartInputOutput; ShapeOfFlowChartInternalStorage; ShapeOfFlowChartMagneticDisk
+    ShapeOfFlowChartMagneticDrum; ShapeOfFlowChartMagneticTape; ShapeOfFlowChartManualInput; ShapeOfFlowChartManualOperation; ShapeOfFlowChartMerge
+    ShapeOfFlowChartMultidocument; ShapeOfFlowChartOfflineStorage; ShapeOfFlowChartOffpageConnector; ShapeOfFlowChartOnlineStorage; ShapeOfFlowChartOr
+    ShapeOfFlowChartPredefinedProcess; ShapeOfFlowChartPreparation; ShapeOfFlowChartProcess; ShapeOfFlowChartPunchedCard; ShapeOfFlowChartPunchedTape
+    ShapeOfFlowChartSort; ShapeOfFlowChartSummingJunction; ShapeOfFlowChartTerminator; ShapeOfFoldedCorner; ShapeOfFrame; ShapeOfFunnel; ShapeOfGear6
+    ShapeOfGear9; ShapeOfHalfFrame; ShapeOfHeart; ShapeOfHeptagon; ShapeOfHexagon; ShapeOfHomePlate; ShapeOfHorizontalScroll; ShapeOfIrregularSeal1
+    ShapeOfIrregularSeal2; ShapeOfLeftArrow; ShapeOfLeftArrowCallout; ShapeOfLeftBrace; ShapeOfLeftBracket; ShapeOfLeftCircularArrow; ShapeOfLeftRightArrow
+    ShapeOfLeftRightArrowCallout; ShapeOfLeftRightCircularArrow; ShapeOfLeftRightRibbon; ShapeOfLeftRightUpArrow; ShapeOfLeftUpArrow; ShapeOfLightningBolt
+    ShapeOfLine; ShapeOfLineInv; ShapeOfMathDivide; ShapeOfMathEqual; ShapeOfMathMinus; ShapeOfMathMultiply; ShapeOfMathNotEqual; ShapeOfMathPlus; ShapeOfMoon
+    ShapeOfNonIsoscelesTrapezoid; ShapeOfNoSmoking; ShapeOfNotchedRightArrow; ShapeOfOctagon; ShapeOfParallelogram; ShapeOfPentagon; ShapeOfPie; ShapeOfPieWedge
+    ShapeOfPlaque; ShapeOfPlaqueTabs; ShapeOfPlus; ShapeOfQuadArrow; ShapeOfQuadArrowCallout; ShapeOfRect; ShapeOfRibbon; ShapeOfRibbon2; ShapeOfRightArrow
+    ShapeOfRightArrowCallout; ShapeOfRightBrace; ShapeOfRightBracket; ShapeOfRound1Rect; ShapeOfRound2DiagRect; ShapeOfRound2SameRect; ShapeOfRoundRect
+    ShapeOfRtTriangle; ShapeOfSmileyFace; ShapeOfSnip1Rect; ShapeOfSnip2DiagRect; ShapeOfSnip2SameRect; ShapeOfSnipRoundRect; ShapeOfSquareTabs; ShapeOfStar10
+    ShapeOfStar12; ShapeOfStar16; ShapeOfStar24; ShapeOfStar32; ShapeOfStar4; ShapeOfStar5; ShapeOfStar6; ShapeOfStar7; ShapeOfStar8; ShapeOfStraightConnector1
+    ShapeOfStripedRightArrow; ShapeOfSun; ShapeOfSwooshArrow; ShapeOfTeardrop; ShapeOfTrapezoid; ShapeOfTriangle; ShapeOfUpArrow; ShapeOfUpArrowCallout
+    ShapeOfUpDownArrow; ShapeOfUpDownArrowCallout; ShapeOfUturnArrow; ShapeOfWave; ShapeOfWedgeEllipseCallout; ShapeOfWedgeRectCallout; ShapeOfWedgeRoundRectCallout
+    ShapeOfVerticalScroll ]
+
 let sheets = [
   { Name = "sample1"; Cells = samples 0 |> fst; Drawings = [] }
   { Name = "sample2"; Cells = []; Drawings =
       [ Shape.createWithText "hoge" ShapeOfCallout1 (ShapeText.create (noFontRichText "Hello" |> updateFont meiryo)) (TopLeftPixel (10<pixel>, 10<pixel>))
         Drawing.updateSize (Percent 50) (Shape.createWithText "piyo" ShapeOfCallout2 (ShapeText.create (noFontRichText "Hello") |> leftify) (TopLeftPixel (250<pixel>, 10<pixel>)))
         Image.createFromPath "" (System.IO.FileInfo("sample.png")) (TopLeftPixel (10<pixel>, 250<pixel>))] }
+  { Name = "sample3"; Cells = []; Drawings =
+      shapes |> List.mapi (fun i s ->
+        let name = "shape" + string i
+        let row = { Address = i * 5; Offset = 0<pixel> }
+        let col = { Address = 1; Offset = 0<pixel> }
+        Shape.createWithText name s (ShapeText.create (noFontRichText (sprintf "%A" s) |> updateFont meiryo)) (RowColAndOffsetPixcel(row, col))
+        |> Drawing.updateSize (Percent 50)
+      ) }
 ]
 
 [<EntryPoint>]
