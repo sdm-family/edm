@@ -29,6 +29,7 @@ type BookSettings = {
 type SheetSettings = {
   ShowGuideLines: bool option
   ShowHeaders: bool option
+  ZoomScale: int<pixel> option
   LongEdge: LongEdge option
   PrintArea: PrintArea option
   Fit: Fit option
@@ -97,6 +98,7 @@ type Writer [<Obsolete("このコンストラクタの代わりにEdm.Writer.EPP
     let s = this.CurrentBook.Worksheets.Add(sheet.Name, this.TemplateSheet)
     sheetSettings.ShowGuideLines |> Option.iter (fun x -> s.View.ShowGridLines <- x)
     sheetSettings.ShowHeaders |> Option.iter (fun x -> s.View.ShowHeaders <- x)
+    sheetSettings.ZoomScale |> Option.iter (fun x -> s.View.ZoomScale <- int x)
     sheetSettings.LongEdge
     |> Option.iter (function
                     | LEHeight -> s.PrinterSettings.Orientation <- eOrientation.Portrait
@@ -143,7 +145,7 @@ module EPPlusWriter =
       outputFilePath,
       templateFilePath,
       { ShowSheetTabs = None; ShowHorizontalScrollBar = None; ShowVerticalScrollBar = None },
-      { ShowGuideLines = None; ShowHeaders = None; LongEdge = None; PrintArea = None; Fit = None }) :> IWriter
+      { ShowGuideLines = None; ShowHeaders = None; ZoomScale = None; LongEdge = None; PrintArea = None; Fit = None }) :> IWriter
 
   let createWithSettings (bookSettings, sheetSettings) (outputFilePath: string, templateFilePath: string) =
     Writer(outputFilePath, templateFilePath, bookSettings, sheetSettings) :> IWriter
@@ -153,7 +155,7 @@ module EPPlusWriter =
       outputFilePath,
       templateFilePath,
       settings,
-      { ShowGuideLines = None; ShowHeaders = None; LongEdge = None; PrintArea = None; Fit = None }) :> IWriter
+      { ShowGuideLines = None; ShowHeaders = None; ZoomScale = None; LongEdge = None; PrintArea = None; Fit = None }) :> IWriter
 
   let createWithSheetSettings settings (outputFilePath: string, templateFilePath: string) =
     Writer(
